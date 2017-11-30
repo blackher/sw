@@ -7,9 +7,12 @@ class Server
         $this->serv=new swoole_server("192.168.11.98",5555);
         
         $this->serv->set(array(
-                'work_num'=>8,
-                'task_work_num' =>8,//设置启动2个task 进程
-                'debug_mode'=>1
+            'worker_num' => 8,
+            'daemonize' => false,
+            'max_request' => 10000,
+            'dispatch_mode' => 2,
+            'debug_mode'=> 1,
+            'task_worker_num' => 8
                 ));
     $this->serv->on('Start', array($this, 'onStart'));
     $this->serv->on('Connect', array($this, 'onConnect'));
