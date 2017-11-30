@@ -21,13 +21,13 @@ class Client{
     //连接socket server
     public function onConnect(){
 
-        fwrite(STDOUT,"entry msg:");
+        fwrite(STDOUT,"entry msg:\n");
         swoole_event_add(STDIN,function($fd){
             global $cli;
-            fwrite(STDOUT,"enter msg");
+            fwrite(STDOUT,"enter msg\n");
             $msg = trim(fgets(STDIN));
             if(empty($msg)){
-                fwrite(STDOUT,"msg isnot null");
+                fwrite(STDOUT,"msg isnot null\n");
                 
             }else{
                 $cli -> send($msg);
