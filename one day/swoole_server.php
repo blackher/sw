@@ -5,13 +5,12 @@ class Server
 
     public function __construct(){
         $serv=new swoole_server("192.168.11.98",5555);
-
+        
         $serv->set(array(
                 'work_num'=>8,
                 'task_work_num' =>2,//设置启动2个task 进程
                 'debug_mode'=>1
                 ));
-
     $this->serv->on('Start', array($this, 'onStart'));
     $this->serv->on('Connect', array($this, 'onConnect'));
     $this->serv->on('Receive', array($this, 'onReceive'));
@@ -19,7 +18,7 @@ class Server
     // bind callback
     $this->serv->on('Task', array($this, 'onTask'));
     $this->serv->on('Finish', array($this, 'onFinish'));
-    $this->serv->start();
+    $this->serv->Start();
     }
     public function onStart( $serv ) {
         echo "Start\n";
