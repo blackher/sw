@@ -45,7 +45,7 @@ class Server
         echo "This Task {$task_id} from Worker {$from_id}\n";
         echo "Data: {$data}\n";
         for($i = 0 ; $i < 10 ; $i ++ ) {
-            sleep(1);
+            //sleep(1);
             echo "Taks {$task_id} Handle {$i} times...\n";
         }
         $fd = json_decode( $data , true )['fd'];
