@@ -55,13 +55,20 @@ class Client{
         return $this->client->isConnected();
     }
 
+    
+    public function onError() {
+        echo "client error";
+
+    }   
     public function connect() {
 		$fp = $this->client->connect("192.168.11.98", 5555 , 1);
 		if( !$fp ) {
 			echo "Error: {$fp->errMsg}[{$fp->errCode}]\n";
 			return;
 		}
-	}
+    }
+    
+
 
 }
 $cli = new Client();
