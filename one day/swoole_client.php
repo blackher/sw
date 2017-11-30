@@ -13,7 +13,7 @@ class Client{
         $this->client->on('Close', array($this, 'onClose'));
         $this->client->on('Error', array($this, 'onError'));
 
-
+        $this->client->on('BufferEmpty',array($this,'onBufferEmpty');
 
 
     }
@@ -39,9 +39,13 @@ class Client{
 
     }
 
-    public function onClose($cli){
+    public function onClose(){
 
         echo "client close";
+        
+    }
+
+    public function onBufferEmpty(){
         $this->client->close();
     }
 
