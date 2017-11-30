@@ -4,9 +4,9 @@ class Server
     private $serv;
 
     public function __construct(){
-        $serv=new swoole_server("192.168.11.98",5555);
+        $this->serv=new swoole_server("192.168.11.98",5555);
         
-        $serv->set(array(
+        $this->serv->set(array(
                 'work_num'=>8,
                 'task_work_num' =>2,//设置启动2个task 进程
                 'debug_mode'=>1
