@@ -27,7 +27,7 @@ class Client{
             fwrite(STDOUT,"enter msg");
             $msg = trim(fgets(STDIN));
             if($msg){
-                fwrite("msg isnot null")
+                fwrite("msg isnot null");
                 
             }else{
                 $cli -> send($msg);
