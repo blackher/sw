@@ -42,6 +42,7 @@ class Client{
     public function onClose($cli){
 
         echo "client close";
+        $this->client->close();
     }
 
     public function send($data){
