@@ -13,7 +13,7 @@ class Client{
         $this->client->on('Close', array($this, 'onClose'));
         $this->client->on('Error', array($this, 'onError'));
 
-        $this->client->on('BufferEmpty',array($this,'onBufferEmpty');
+        $this->client->on('BufferEmpty',array($this,'onBufferEmpty'));
 
 
     }
