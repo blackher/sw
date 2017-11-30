@@ -8,7 +8,7 @@ class Server
         
         $this->serv->set(array(
                 'work_num'=>8,
-                'task_work_num' =>2,//设置启动2个task 进程
+                'task_work_num' =>8,//设置启动2个task 进程
                 'debug_mode'=>1
                 ));
     $this->serv->on('Start', array($this, 'onStart'));
