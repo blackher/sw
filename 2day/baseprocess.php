@@ -10,7 +10,7 @@ class Base{
 	
         for ($i=0; $i < self::PROCESS_NUM  ; $i++) { 
             # code...
-            $process = new swoole_process('run',false,true);
+            $process = new swoole_process(array($this,'run'),false,true);
 
             $pid = $process->start();
 
