@@ -40,7 +40,7 @@ class Client{
 
     public function onReceive($cli,$data){
         echo "get data".$data."\n";
-
+        
 
     }
 
