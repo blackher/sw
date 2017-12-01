@@ -28,6 +28,13 @@ class Base{
     }
 
 
+
+
 }
 
 new Base();
+swoole_process::signal(SIGCHLD, function($sig) {
+    while($ret =  swoole_process::wait(false)) {
+        echo "PID={$ret['pid']}\n";
+    }
+  });
