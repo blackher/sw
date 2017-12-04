@@ -12,7 +12,7 @@ class Server
             'max_request' => 10000,
             'dispatch_mode' => 2,
             'debug_mode'=> 1,
-            'task_worker_num' => 8,
+            //'task_worker_num' => 8,
             'heartbeat_check_interval'=>60,
             'heartbeat_idle_time'=>600
                 ));
@@ -29,11 +29,11 @@ class Server
     }
 
     public function onWorkerStart($serv,$worker_id){
-        echo "onWorkerStart\n";
+        echo "onWorkerStart";
         // 只有当worker_id为0时才添加定时器,避免重复添加
-        echo $worder_id;
+        echo $worker_id."\n";
 	if( $worker_id == 0 ) {
-        	//$serv->addtimer(5000);
+        	$serv->tick(5000);
         }
 
     }
