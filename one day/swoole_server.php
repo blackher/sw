@@ -12,7 +12,9 @@ class Server
             'max_request' => 10000,
             'dispatch_mode' => 2,
             'debug_mode'=> 1,
-            'task_worker_num' => 8
+            'task_worker_num' => 8,
+            'heartbeat_check_interval'=>60,
+            'heartbeat_idle_time'=>600
                 ));
     $this->serv->on('Start', array($this, 'onStart'));
     $this->serv->on('Connect', array($this, 'onConnect'));
@@ -21,8 +23,21 @@ class Server
     // bind callback
     $this->serv->on('Task', array($this, 'onTask'));
     $this->serv->on('Finish', array($this, 'onFinish'));
+
+    $this->serv->on('WorkerStart',array($this,'onWorkerStart'));
     $this->serv->Start();
     }
+
+    public function onWorkerStart($serv,$worker_id){
+        echo "onWorkerStart\n";
+        // 只有当worker_id为0时才添加定时器,避免重复添加
+        if( $worker_id == 0 ) {
+        	$serv->addtimer(5000);
+        }
+
+    }
+
+
     public function onStart( $serv ) {
         echo "Start\n";
     }
