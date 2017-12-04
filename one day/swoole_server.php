@@ -12,7 +12,7 @@ class Server
             'max_request' => 10000,
             'dispatch_mode' => 2,
             'debug_mode'=> 1,
-            //'task_worker_num' => 8,
+            'task_worker_num' => 8,
             'heartbeat_check_interval'=>60,
             'heartbeat_idle_time'=>600
                 ));
