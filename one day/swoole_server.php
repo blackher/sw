@@ -31,8 +31,9 @@ class Server
     public function onWorkerStart($serv,$worker_id){
         echo "onWorkerStart\n";
         // 只有当worker_id为0时才添加定时器,避免重复添加
-        if( $worker_id == 0 ) {
-        	$serv->addtimer(5000);
+        echo $worder_id;
+	if( $worker_id == 0 ) {
+        	//$serv->addtimer(5000);
         }
 
     }
