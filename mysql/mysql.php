@@ -1,5 +1,6 @@
 <?php
-    $swoole_mysql = new Swoole\Coroutine\MySQL();
+    
+    $swoole_mysql = new SwooleCoroutineMySQL();
     $swoole_mysql->connect([
         'host' => '127.0.0.1',
         'port' => 3306,
@@ -8,4 +9,4 @@
         'database' => 'sd',
     ]);
     $res = $swoole_mysql->query('select * from user');
-    print_r($res);
+    print_r($res);   
