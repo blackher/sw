@@ -22,7 +22,7 @@ class Base{
     public function run(swoole_process $process ){
 
         $process->name("process test");
-        print_r($process);
+        
     
 
     }
