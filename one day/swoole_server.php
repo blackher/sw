@@ -29,8 +29,14 @@ class Server
     }
 
     public function onWorkerStart($serv,$worker_id){
-        echo "onWorkerStart";
-        echo $worker_id."\n";
+        global $argv;
+        $worker_num = isset($serv->setting['worker_num']) ? $serv->setting['worker_num'] : 1;
+		$task_worker_num = isset($serv->setting['task_worker_num']) ? $serv->setting['task_worker_num'] : 0;
+        if ($worker_id >= $worker_num) {
+			swoole_set_process_name("php {$argv[0]}: task");
+		} else {
+			swoole_set_process_name("php {$argv[0]}: worker");
+		}
 
     }
 
