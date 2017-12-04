@@ -1,6 +1,6 @@
 <?php
-    
-    $swoole_mysql = new SwooleCoroutineMySQL();
+    use Swoole\Coroutine;
+    $swoole_mysql = new Swoole\Coroutine\MySQL();
     $swoole_mysql->connect([
         'host' => '127.0.0.1',
         'port' => 3306,
