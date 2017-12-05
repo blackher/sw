@@ -31,5 +31,5 @@ $mysql->connect($server, function (Swoole\Mysql $db, $r) {
 
 
     
-$mysql->close();
+//$mysql->close();
      
