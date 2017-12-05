@@ -2,7 +2,7 @@
 global $mysql;
 $mysql = new Swoole\Mysql();
 $server = array(
-    'host' => '192.168.11.98',
+    'host' => '127.0.0.1',
     'port' => 3306,
     'user' => 'root',
     'password' => 'MyNewPass4!',
@@ -17,7 +17,8 @@ $mysql->connect($server, function (Swoole\Mysql $db, $r) {
     }
     //start query
     $sql = 'show tables';
-    $mysql->query($sql, function (Swoole\Mysql $db, $r) {
+	//print_r($db);exit;
+    $db->query($sql, function (Swoole\Mysql $db, $r) {
         if ($r === false) {
             var_dump($db->error, $db->errno);
         } elseif ($r === true) {
