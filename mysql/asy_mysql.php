@@ -26,9 +26,9 @@ $mysql->connect($server, function (Swoole\Mysql $db, $r) {
             var_dump($db->affected_rows, $db->insert_id);
         }
         var_dump($r);
-        
+        $db->close();    
     });
-    $db->close();
+    
 });
 
 
