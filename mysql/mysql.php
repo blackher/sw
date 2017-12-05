@@ -15,18 +15,19 @@ $mysql->connect($server, function (Swoole\Mysql $db, $r) {
         var_dump($db->connect_errno, $db->connect_error);
         die;
     }
+});
     //start query
-    $sql = 'show tables';
-	//print_r($db);exit;
-    $db->query($sql, function (Swoole\Mysql $db, $r) {
-        if ($r === false) {
-            var_dump($db->error, $db->errno);
-        } elseif ($r === true) {
-            var_dump($db->affected_rows, $db->insert_id);
-        }
+$sql = 'select * from user';
+
+$mysql->query($sql, function (Swoole\Mysql $db, $r) {
+    if ($r === false) {
+        var_dump($db->error, $db->errno);
+    } elseif ($r === true) {
+        var_dump($db->affected_rows, $db->insert_id);
+    }
     var_dump($r);
-    });
+});
 
     
-});
+$mysql->close();
      
