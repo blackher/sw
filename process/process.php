@@ -21,7 +21,7 @@ class Process
         # code...
         
             if($this->child <= $this->worker_max){
-                $process = new swoole_process('callback_function',false);
+                $process = new swoole_process[$this, 'callback_function'];
 
                 // 启用消息队列 int $msgkey = 0, int $mode = 2
                 $process->useQueue(0, 2);
@@ -69,6 +69,13 @@ class Process
 
         $worker->exit(0);
     // $worker->exit(0);
+
+
+    $data = $worker->pop();
+    echo $data;
+    sleep(rand(1, 3));
+    echo "From Master: $data\n";
+    $worker->exit(0);
     }
 
 
