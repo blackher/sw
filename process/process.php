@@ -21,19 +21,19 @@ class Process
         # code...
         
             if($this->child <= $this->worker_max){
-                $process = new swoole_process[$this, 'callback_function'];
+                $process = new swoole_process([$this, 'callback_function']);
 
                 // 启用消息队列 int $msgkey = 0, int $mode = 2
                 $process->useQueue(0, 2);
                 $pid = $process->start();
-                $data = $redis->rpop('process');
+                $data = $this->redis->rpop('process');
                 if(!$data){// 管道写入内容
                 // $process->write(json_encode(['name' => '进程','pid' => $pid]));
                     continue;
                 }//很重要  跑死了               
 
                 $process->push($data);
-                $worker_num ++;
+                $this->child ++;
                 // 进程重命名
                 $process->name('child_namne_process_'.$pid);
 
