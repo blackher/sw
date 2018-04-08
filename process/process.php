@@ -17,7 +17,6 @@ class Process
 
     function run(){
 
-
          while (1) {//循环获取
         # code...
         
@@ -40,7 +39,9 @@ class Process
 
                 // 将每一个进程的句柄存起来
                 $workers[$pid] = $process;//fd
+
                 $ret = swoole_process::wait();
+
                 if ($ret){// $ret 是个数组 code是进程退出状态码，
                     $pid = $ret['pid'];
                     //unset($workers[$pid]);
@@ -54,8 +55,7 @@ class Process
 
 
             }
-
-
+        }
     }
     function callback_function(swoole_process $worker)
     {
