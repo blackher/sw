@@ -62,7 +62,7 @@ class Process1
 		        
             	   sleep(rand(1, 3));//模拟耗时
             	   echo "From Master: {$recv}\n";
-                }
+                });
             	exit;
 
 	        }, false, false);
