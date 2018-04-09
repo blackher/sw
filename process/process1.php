@@ -56,10 +56,13 @@ class Process1
 	                $this->new_index++;
 	            }//是否是新增子进程
 	            swoole_set_process_name(sprintf('php-ps:%s',$index));//重新命名当前子进程
-	            $recv = $worker->read();            //recive data to master
-		$this->checkMpid($worker);
-            	sleep(rand(1, 3));//模拟耗时
-            	echo "From Master: {$recv}\n";
+                $this->checkMpid($worker);
+                swoole_event_add($worker->pipe, function($pipe) {
+	               $recv = $worker->read();            //recive data to master
+		        
+            	   sleep(rand(1, 3));//模拟耗时
+            	   echo "From Master: {$recv}\n";
+                }
             	exit;
 
 	        }, false, false);
