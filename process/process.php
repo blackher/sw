@@ -24,15 +24,19 @@ class Process
                 $process = new swoole_process([$this, 'callback_function']);
 
                 // 启用消息队列 int $msgkey = 0, int $mode = 2
-                $process->useQueue(0, 2);
-                $pid = $process->start();
                 $data = $this->redis->rpop('process');
                 if(!$data){// 管道写入内容
                 // $process->write(json_encode(['name' => '进程','pid' => $pid]));
                     continue;
-                }//很重要  跑死了               
+                }//很重要  跑死了 
+                $process->useQueue(0, 2);
+                
+                $pid = $process->start();
+
+                              
 
                 $process->push($data);
+
                 $this->child ++;
                 // 进程重命名
                 $process->name('child_namne_process_'.$pid);
@@ -45,6 +49,7 @@ class Process
                 if ($ret){// $ret 是个数组 code是进程退出状态码，
                     $pid = $ret['pid'];
                     //unset($workers[$pid]);
+
                         echo PHP_EOL."Worker Exit, PID=" . $pid . PHP_EOL;
                 }else{
                 
@@ -63,7 +68,7 @@ class Process
         // echo "子输出主内容: {$recv}".PHP_EOL;
         // $worker->push("我是子进程内容");
 
-        sleep(rand(1, 3));//模拟执行任务耗时
+        sleep(1)
 
         echo "From Master: $recv\n";
 
