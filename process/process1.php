@@ -56,8 +56,7 @@ class Process1
 	                $this->new_index++;
 	            }//是否是新增子进程
 	            swoole_set_process_name(sprintf('php-ps:%s',$index));//重新命名当前子进程
-                $this->checkMpid($worker);
-                $this->checkMpid($worker);
+                $this->checkMpid($worker);//结束主进程
                 $recv = $worker->pop();            //recive data to master
                 
                 sleep(rand(1, 3));//模拟耗时
@@ -65,17 +64,17 @@ class Process1
             	exit;
 
 	        }, false, false);
-            $process->useQueue();
+            $process->useQueue();//使用队列 传输数据到子进程
 	        $pid=$process->start();  //执行fork系统调用，启动进程 放回子进程pid。
-	        $process->push($data);
+	        $process->push($data);//队列push数据
 	        $this->works[$index]=$pid;//记录当前pid
-            swoole_process::signal(SIGCHLD, function($sig) {
-            //必须为false，非阻塞模式
-                while($ret =  swoole_process::wait(false)) {
-                     $this->new_index--;
-                    echo "{$ret['pid']} process exit";
-                }
-            });
+          
+            //必须为false，非阻塞模式  异步处理
+            while($ret =  swoole_process::wait(false)) {
+                   $this->new_index--;
+                   echo "{$ret['pid']} process exit";
+            }
+            
 	        //return $pid;
     	}
     }
@@ -113,17 +112,17 @@ class Process1
     //         }
     //     }
     // }
-    private function sig_handler($signo) {
-//        echo "Recive: $signo \r\n";
-        switch ($signo) {
-            case SIGCHLD:
-                while($ret = swoole_process::wait(false)) {
-//                    echo "PID={$ret['pid']}\n";
-                    $this->new_index--;
-                    echo "{$ret['pid']} process exit";
-                }
-        }
-    }
+//     private function sig_handler($signo) {
+// //        echo "Recive: $signo \r\n";
+//         switch ($signo) {
+//             case SIGCHLD:
+//                 while($ret = swoole_process::wait(false)) {
+// //                    echo "PID={$ret['pid']}\n";
+//                     $this->new_index--;
+//                     echo "{$ret['pid']} process exit";
+//                 }
+//         }
+//     }
 
 //作者：闫大伯
 //链接：https://www.jianshu.com/p/54ffd360454f
