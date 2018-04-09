@@ -14,8 +14,8 @@ class Process1
 
     public function  __construct(){
     	 try {
-          declare(ticks=1);//每执行一次低级语句会检查一次该进程是否有未处理过的信号		
-            ini_set("memory_limit","80M");
+            declare(ticks=1);//每执行一次低级语句会检查一次该进程是否有未处理过的信号		
+            ini_set("memory_limit","80M");//防止内存过小
     	 	// install signal handler for dead kids
         	pcntl_signal(SIGCHLD, [$this, "sig_handler"]);  //参考简书 https://www.jianshu.com/p/54ffd360454f
 
