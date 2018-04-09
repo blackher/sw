@@ -15,7 +15,7 @@ class Process1
     public function  __construct(){
     	 try {
     	 	// install signal handler for dead kids
-        	pcntl_signal(SIGCHLD, [$this, "sig_handler"]);  //参考简书 https://www.jianshu.com/p/54ffd360454f
+        	//pcntl_signal(SIGCHLD, [$this, "sig_handler"]);  //参考简书 https://www.jianshu.com/p/54ffd360454f
 
         	//这就导致一个问题：当执行N个任务之后，任务系统空闲的时候主进程是阻塞的，而在发生阻塞的时候子进程还在执行，所以就无法完成最后几个子进程的进程回收。。。
 
@@ -57,19 +57,25 @@ class Process1
 	            }//是否是新增子进程
 	            swoole_set_process_name(sprintf('php-ps:%s',$index));//重新命名当前子进程
                 $this->checkMpid($worker);
-                swoole_event_add($worker->pipe, function($pipe) {
-	               $recv = $worker->read();            //recive data to master
-		        
-            	   sleep(rand(1, 3));//模拟耗时
-            	   echo "From Master: {$recv}\n";
-                });
+                $this->checkMpid($worker);
+                $recv = $worker->pop();            //recive data to master
+                
+                sleep(rand(1, 3));//模拟耗时
+                echo "From Master: {$recv}\n";
             	exit;
 
 	        }, false, false);
+            $process->useQueue();
 	        $pid=$process->start();  //执行fork系统调用，启动进程 放回子进程pid。
-            swoole_event_add($process->pipe,function($pipe){
-	        $process->write($data);
+	        $process->push($data);
 	        $this->works[$index]=$pid;//记录当前pid
+            swoole_process::signal(SIGCHLD, function($sig) {
+            //必须为false，非阻塞模式
+                while($ret =  swoole_process::wait(false)) {
+                     $this->new_index--;
+                    echo "{$ret['pid']} process exit";
+                }
+            });
 	        //return $pid;
     	}
     }
