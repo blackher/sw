@@ -56,7 +56,11 @@ class Process1
 	                $index=$this->new_index;
 	                $this->new_index++;
 	            }//是否是新增子进程
+<<<<<<< HEAD
 		     echo "index is {$index}";
+=======
+
+>>>>>>> f9016ff13cd8413560b4d231186315a83eaf2422
 	            swoole_set_process_name(sprintf('php-ps:%s',$index));//重新命名当前子进程
                 $this->checkMpid($worker);//结束主进程
                 $recv = $worker->pop();            //recive data to master
@@ -67,13 +71,18 @@ class Process1
 
 	        }, false, false);
             $process->useQueue();//使用队列 传输数据到子进程
+
 	        $pid=$process->start();  //执行fork系统调用，启动进程 放回子进程pid。
+
 	        $process->push($data);//队列push数据
-	        $this->works[$index]=$pid;//记录当前pid
+	        
+            $this->works[$index]=$pid;//记录当前pid
           
-            //必须为false，非阻塞模式  异步处理
+            //必须为false，非阻塞模式  异步处理  这里释放不了 why
             while($ret =  swoole_process::wait(false)) {
+
                    $this->new_index--;
+                   
                    echo "{$ret['pid']} process exit";
             }
             
