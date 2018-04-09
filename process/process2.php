@@ -14,6 +14,7 @@ class Process1
 
     public function  __construct(){
     	 try {
+            ini_set("memory_limit","80M":)
     	 	// install signal handler for dead kids
         	pcntl_signal(SIGCHLD, [$this, "sig_handler"]);  //参考简书 https://www.jianshu.com/p/54ffd360454f
 
