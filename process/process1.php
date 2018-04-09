@@ -24,9 +24,9 @@ class Process1
 			$this->redis = new Redis();
         	$this->redis->connect('192.168.11.98', 6379); //连接Redis
             swoole_set_process_name(sprintf('php-ps:%s', 'master'));//进程命名
-            $this->mpid = posix_getpid();//获取当前进程id
+           // $this->mpid = posix_getpid();//获取当前进程id
             $this->run();//创建子进程
-            $this->processWait();//子进程回收
+            //$this->processWait();//子进程回收
         }catch (\Exception $e){
             die('ALL ERROR: '.$e->getMessage());
         }
@@ -57,7 +57,7 @@ class Process1
 	            }//是否是新增子进程
 	            swoole_set_process_name(sprintf('php-ps:%s',$index));//重新命名当前子进程
 	            $recv = $worker->read();            //recive data to master
-
+		$this->checkMpid($worker);
             	sleep(rand(1, 3));//模拟耗时
             	echo "From Master: {$recv}\n";
             	exit;
