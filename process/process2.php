@@ -57,18 +57,17 @@ class Process1
 	            }//是否是新增子进程
 	            swoole_set_process_name(sprintf('php-ps:%s',$index));//重新命名当前子进程
                 $this->checkMpid($worker);
-                swoole_event_add($worker->pipe, function($pipe) {
-	               $recv = $worker->read();            //recive data to master
+	            $recv = $worker->pop();            //recive data to master
 		        
-            	   sleep(rand(1, 3));//模拟耗时
-            	   echo "From Master: {$recv}\n";
-                });
+            	sleep(rand(1, 3));//模拟耗时
+            	echo "From Master: {$recv}\n";
+          
             	exit;
 
 	        }, false, false);
+            $process->useQueue();
 	        $pid=$process->start();  //执行fork系统调用，启动进程 放回子进程pid。
-            swoole_event_add($process->pipe,function($pipe){
-	        $process->write($data);
+            $process->push($data);
 	        $this->works[$index]=$pid;//记录当前pid
 	        //return $pid;
     	}
