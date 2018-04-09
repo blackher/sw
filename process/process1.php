@@ -14,18 +14,19 @@ class Process1
 
     public function  __construct(){
     	 try {
-    	 	// install signal handler for dead kids
-        	//pcntl_signal(SIGCHLD, [$this, "sig_handler"]);  //参考简书 https://www.jianshu.com/p/54ffd360454f
+    	// install signal handler for dead kids
+        //pcntl_signal(SIGCHLD, [$this, "sig_handler"]);  //参考简书 https://www.jianshu.com/p/54ffd360454f
 
-        	//这就导致一个问题：当执行N个任务之后，任务系统空闲的时候主进程是阻塞的，而在发生阻塞的时候子进程还在执行，所以就无法完成最后几个子进程的进程回收。。。
+        //这就导致一个问题：当执行N个任务之后，任务系统空闲的时候主进程是阻塞的，而在发生阻塞的时候子进程还在执行，所以就无法完成最后几个子进程的进程回收。。。
 
-			//process.php 就有这个问题  直接内存cpu 消耗太大
+	//process.php 就有这个问题  直接内存cpu 消耗太大
 
-			$this->redis = new Redis();
-        	$this->redis->connect('192.168.11.98', 6379); //连接Redis
-            swoole_set_process_name(sprintf('php-ps:%s', 'master'));//进程命名
-           // $this->mpid = posix_getpid();//获取当前进程id
-            $this->run();//创建子进程
+	$this->redis = new Redis();
+        $this->redis->connect('192.168.11.98', 6379); //连接Redis
+         swoole_set_process_name(sprintf('php-ps:%s', 'master'));//进程命名
+         $this->mpid = posix_getpid();//获取当前进程id
+        echo "{$this->mpid}";  
+        $this->run();//创建子进程
             //$this->processWait();//子进程回收
         }catch (\Exception $e){
             die('ALL ERROR: '.$e->getMessage());
@@ -55,6 +56,7 @@ class Process1
 	                $index=$this->new_index;
 	                $this->new_index++;
 	            }//是否是新增子进程
+		     echo "index is {$index}";
 	            swoole_set_process_name(sprintf('php-ps:%s',$index));//重新命名当前子进程
                 $this->checkMpid($worker);//结束主进程
                 $recv = $worker->pop();            //recive data to master

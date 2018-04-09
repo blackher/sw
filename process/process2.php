@@ -16,18 +16,18 @@ class Process1
     	 try {
             declare(ticks=1);//每执行一次低级语句会检查一次该进程是否有未处理过的信号		
             ini_set("memory_limit","80M");//防止内存过小
-    	 	// install signal handler for dead kids
-        	pcntl_signal(SIGCHLD, [$this, "sig_handler"]);  //参考简书 https://www.jianshu.com/p/54ffd360454f
+    	    // install signal handler for dead kids
+            pcntl_signal(SIGCHLD, [$this, "sig_handler"]);  //参考简书 https://www.jianshu.com/p/54ffd360454f
 
         	//这就导致一个问题：当执行N个任务之后，任务系统空闲的时候主进程是阻塞的，而在发生阻塞的时候子进程还在执行，所以就无法完成最后几个子进程的进程回收。。。
 
 			//process.php 就有这个问题  直接内存cpu 消耗太大
 
-			$this->redis = new Redis();
-        	$this->redis->connect('192.168.11.98', 6379); //连接Redis
-            swoole_set_process_name(sprintf('php-ps:%s', 'master'));//进程命名
-           // $this->mpid = posix_getpid();//获取当前进程id
-            $this->run();//创建子进程
+	   $this->redis = new Redis();
+           $this->redis->connect('192.168.11.98', 6379); //连接Redis
+           swoole_set_process_name(sprintf('php-ps:%s', 'master'));//进程命名
+           $this->mpid = posix_getpid();//获取当前进程id
+           $this->run();//创建子进程
             //$this->processWait();//子进程回收
         }catch (\Exception $e){
             die('ALL ERROR: '.$e->getMessage());
@@ -69,7 +69,7 @@ class Process1
 
 	        }, false, false);
             $process->useQueue();
-	        $pid=$process->start();  //执行fork系统调用，启动进程 放回子进程pid。
+	    $pid=$process->start();  //执行fork系统调用，启动进程 放回子进程pid。
             $process->push($data);
 	        $this->works[$index]=$pid;//记录当前pid
 	        //return $pid;
