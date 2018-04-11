@@ -10,9 +10,11 @@ class Process1
 	public $mpid=0;//当前进程id
     public $works=[];//记录子进程
     public $max_precess=1;//最多进程数
-    public $new_index=0;//记录进程数
-
+    public $new_index=0;//记录子进程数
+    
+    public $max_child =10;//最大子进程数
     public function  __construct(){
+
     	 try {
             declare(ticks=1);//每执行一次低级语句会检查一次该进程是否有未处理过的信号		
             ini_set("memory_limit","80M");//防止内存过小
@@ -47,25 +49,27 @@ class Process1
      	//获取redis 数据
      	while (1) {
      		# code...
-     	
-	     	$data = $this->redis->rpop('process');//rpop  阻塞
-	     	if(!$data){
-			sleep(1);
-	     		continue;//没有数据
-	     	}
-	        $process = new swoole_process(function(swoole_process $worker)use($index){
-	            if(is_null($index)){
-	                $index=$this->new_index;
-	                $this->new_index++;
-	            }//是否是新增子进程
-	            swoole_set_process_name(sprintf('php-ps:%s',$index));//重新命名当前子进程
-                $this->checkMpid($worker);
-	            $recv = $worker->pop();            //recive data to master
-		        
-            	sleep(rand(1, 3));//模拟耗时
-            	echo "From Master: {$recv}\n";
-          
-            	exit;
+     	    //限制子进程数量
+            if($this->new_index <= $this->max_child){
+    	     	$data = $this->redis->rpop('process');//rpop  阻塞
+    	     	if(!$data){
+    			sleep(1);
+    	     		continue;//没有数据
+    	     	}
+    	        $process = new swoole_process(function(swoole_process $worker)use($index){
+    	            if(is_null($index)){
+    	                $index=$this->new_index;
+    	                $this->new_index++;
+    	            }//是否是新增子进程
+    	            swoole_set_process_name(sprintf('php-ps:%s',$index));//重新命名当前子进程
+                    $this->checkMpid($worker);
+    	            $recv = $worker->pop();            //recive data to master
+    		        
+                	sleep(rand(1, 3));//模拟耗时
+                	echo "From Master: {$recv}\n";
+              
+                	exit;
+                }
 
 	        }, false, false);
             $process->useQueue();
