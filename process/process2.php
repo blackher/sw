@@ -69,13 +69,14 @@ class Process1
                 	echo "From Master: {$recv}\n";
               
                 	exit;
-                }
+                
 
 	        }, false, false);
             $process->useQueue();
 	    $pid=$process->start();  //执行fork系统调用，启动进程 放回子进程pid。
             $process->push($data);
 	        $this->works[$index]=$pid;//记录当前pid
+        }
 	        //return $pid;
     	}
     }
