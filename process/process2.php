@@ -16,20 +16,20 @@ class Process1
     public function  __construct(){
 
     	 try {
-            declare(ticks=1);//每执行一次低级语句会检查一次该进程是否有未处理过的信号
+            //declare(ticks=1);//每执行一次低级语句会检查一次该进程是否有未处理过的信号
             ini_set("memory_limit","80M");//防止内存过小
     	    // install signal handler for dead kids
             pcntl_signal(SIGCHLD, [$this, "sig_handler"]);  //参考简书 https://www.jianshu.com/p/54ffd360454f
-
+            pcntl_signal_dispatch();//调用每个等待信号通过pcntl_signal() 安装的处理器
         	//这就导致一个问题：当执行N个任务之后，任务系统空闲的时候主进程是阻塞的，而在发生阻塞的时候子进程还在执行，所以就无法完成最后几个子进程的进程回收。。。
 
 			  //process.php 就有这个问题  直接内存cpu 消耗太大
 
-	         $this->redis = new Redis();
-           $this->redis->connect('192.168.11.98', 6379); //连接Redis
-           swoole_set_process_name(sprintf('php-ps:%s', 'master'));//进程命名
-           $this->mpid = posix_getpid();//获取当前进程id
-           $this->run();//创建子进程
+	        $this->redis = new Redis();
+            $this->redis->connect('192.168.11.98', 6379); //连接Redis
+            swoole_set_process_name(sprintf('php-ps:%s', 'master'));//进程命名
+            $this->mpid = posix_getpid();//获取当前进程id
+            $this->run();//创建子进程
             //$this->processWait();//子进程回收
         }catch (\Exception $e){
             die('ALL ERROR: '.$e->getMessage());
@@ -38,10 +38,7 @@ class Process1
     }
 
     public function run(){
-        ///for ($i=0; $i < $this->max_precess; $i++) {
              $this->CreateProcess();
-        //}
-				//$this->CreateProcess();
     }
 
 
@@ -59,17 +56,17 @@ class Process1
     	     		}
 						$this->new_index++;
 						//echo "has {$this->new_index}child process";
-    	      $process = new swoole_process(function(swoole_process $worker)use($index){
-    	          if(is_null($index)){
-    	              $index=$this->new_index;
-    	              $this->new_index++;
-    	           }//是否是新增子进程
-    	          swoole_set_process_name(sprintf('php-ps:%s',$this->new_index));//重新命名当前子进程
-                //$this->checkMpid($worker);
-    	          $recv = $worker->pop();            //recive data to master
-                	//sleep(rand(1, 3));//模拟耗时
-                	//echo "From Master: {$recv}\n";
-									echo "this->new_index :{$this->new_index}\n";
+    	            $process = new swoole_process(function(swoole_process $worker)use($index){
+    	            // if(is_null($index)){
+    	            //     $index=$this->new_index;
+    	            //     $this->new_index++;
+    	            // }//是否是新增子进程
+    	            swoole_set_process_name(sprintf('php-ps:%s',$this->new_index));//重新命名当前子进程
+                    //$this->checkMpid($worker);
+    	            $recv = $worker->pop();            //recive data to master
+                	sleep(rand(1, 3));//模拟耗时
+                	echo "From Master: {$recv}\n";
+					echo "this->new_index :{$this->new_index}\n";
                 	//exit;
 
 
