@@ -20,7 +20,7 @@ class Process1
             ini_set("memory_limit","80M");//防止内存过小
     	    // install signal handler for dead kids
             pcntl_signal(SIGCHLD, [$this, "sig_handler"]);  //参考简书 https://www.jianshu.com/p/54ffd360454f
-            pcntl_signal_dispatch();//调用每个等待信号通过pcntl_signal() 安装的处理器
+           // pcntl_signal_dispatch();//调用每个等待信号通过pcntl_signal() 安装的处理器
         	//这就导致一个问题：当执行N个任务之后，任务系统空闲的时候主进程是阻塞的，而在发生阻塞的时候子进程还在执行，所以就无法完成最后几个子进程的进程回收。。。
 
 			  //process.php 就有这个问题  直接内存cpu 消耗太大
@@ -75,7 +75,7 @@ class Process1
 	          $pid=$process->start();  //执行fork系统调用，启动进程 放回子进程pid。
             $process->push($data);
 	          $this->works[$index]=$pid;//记录当前pid
-						//$this->processWait();
+		pcntl_signal_dispatch();				//$this->processWait();
         }
 	        //return $pid;
     	}
